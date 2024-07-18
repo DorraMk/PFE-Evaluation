@@ -1,0 +1,33 @@
+
+<body>
+    
+<div class="card" *ngIf="testDirection">
+    <p-chart type="line" [data]="data" [options]="options"></p-chart>
+</div>
+
+
+
+<!-- <div class="card">
+    <p-chart type="line" [data]="data2" [options]="options"></p-chart>
+</div> 
+
+
+<p-chart type="bar" [data]="basicData" [options]="basicOptions"></p-chart>
+
+-->
+<div *ngIf="testDirection" >
+    <h5>Moyenne pour chaque critére par poste </h5>
+    <label >veuillez choisir une fonction :</label>
+<p-dropdown  placeholder="Fonctions " [options]="Rhnomm" [autoDisplayFirst]="true"  class="dropdown" 
+optionValue="idnom" optionLabel="lib1" (onChange)="onIdnomSelect($event)" [(ngModel)]="selectedIdnom" >
+</p-dropdown>
+<div class="card">
+    <p-chart type="bar" [data]="basicData" [options]="basicOptions"></p-chart>
+</div>
+</div>
+
+
+<div class="card" *ngIf="!testDirection">
+    <p-chart type="line" [data]="dataUtilisateur" [options]="options"></p-chart>
+</div>
+</body>

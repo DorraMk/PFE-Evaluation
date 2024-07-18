@@ -1,0 +1,250 @@
+<div class="form-container">
+<form>   
+  <!--   <div class="field col-8 md:col-12">
+        <div class="Res">
+      <input  name="nomePrenom" pTooltip="nomePrenom" pInputText  type="text" required  value="{{this.evalue | getEvalue |async }}" disabled />
+      <input  name="contrat" pTooltip="contrat" pInputText  type="text" required value="{{this.evalue | getFonctionEvalue |getFonctionNom|async }}" disabled  />
+      <input  name="contrat" pTooltip="contrat" pInputText  type="text" required  value="{{this.evalue|getContratEvalue|getFonctionNom|async}}" disabled />
+      </div>
+    </div> -->
+    <div class="field col-8 md:col-12">
+        <div class="Res">
+          <input name="nomePrenom" pTooltip="nomePrenom" pInputText type="text" required [value]="this.evalue | getEvalue | async" disabled />
+          <input name="contrat" pTooltip="contrat" pInputText type="text" required [value]="this.evalue | getFonctionEvalue | getFonctionNom | async" disabled />
+          <input name="contrat" pTooltip="contrat" pInputText type="text" required [value]="this.evalue | getContratEvalue | getFonctionNom | async" disabled />
+        </div>
+      </div>
+      
+    <div class="field col-8 md:col-12">
+
+
+      <p-table [value]="TabTheme" dataKey="id" styleClass="p-datatable-customers" rowGroupMode="subheader" groupField="titre">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem"></th>
+            <th></th>
+            <th>Exceptionnel</th>
+            <th>Bon</th>
+            <th>Moyenne</th>
+            <th>Besoin de développement</th>
+            <th>Insatisfaisant</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-theme let-rowIndex="rowIndex">
+          <tr [attr.id]="'row-' + rowIndex" class="p-rowgroup-header" >
+            <td>
+              <button type="button" pButton pRipple class="p-button-text p-button-rounded p-button-plain"
+                [icon]="true ? 'pi pi-chevron-right' : 'pi pi-chevron-right'" disabled></button>
+            </td>
+            <td> <b>{{ theme.titre }}</b></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr *ngFor="let critere of theme.criteres; let rowIndex2=index ">
+            <td></td>
+            <td>{{ critere.titrecritere }}</td>
+            <td>
+              <input type="radio" [name]="'category-' + rowIndex + '-' + critere.idCritere + '-5'"
+                     [(ngModel)]="selectedRatings[rowIndex][rowIndex2]" [value]="5"  (change)="calculateWeightedAverage();setResultatCritere(critere.idCritere, 5)">
+            </td>
+            <td>
+              <input type="radio" [name]="'category-' + rowIndex + '-' + critere.idCritere + '-4'"
+                     [(ngModel)]="selectedRatings[rowIndex][rowIndex2]" [value]="4" (change)="calculateWeightedAverage();setResultatCritere(critere.idCritere, 4)">
+            </td>
+            <td>
+              <input type="radio" [name]="'category-' + rowIndex + '-' + critere.idCritere + '-3'"
+                     [(ngModel)]="selectedRatings[rowIndex][rowIndex2]" [value]="3" (change)="calculateWeightedAverage();setResultatCritere(critere.idCritere, 3)">
+            </td>
+            <td>
+              <input type="radio" [name]="'category-' + rowIndex + '-' + critere.idCritere + '-2'"
+                     [(ngModel)]="selectedRatings[rowIndex][rowIndex2]" [value]="2" (change)="calculateWeightedAverage();setResultatCritere(critere.idCritere, 2)">
+            </td>
+            <td>
+              <input type="radio" [name]="'category-' + rowIndex + '-' + critere.idCritere + '-1'"
+                     [(ngModel)]="selectedRatings[rowIndex][rowIndex2]" [value]="1" (change)="calculateWeightedAverage();setResultatCritere(critere.idCritere, 1)">
+            </td>
+
+            <!-- <td>
+              <input type="radio" [name]="'category' + rowIndex" [(ngModel)]="selectedRatings[rowIndex]"
+                     [value]="5" (change)="calculateWeightedAverage()">
+            </td>
+            <td>
+              <input type="radio" [name]="'category' + rowIndex" [(ngModel)]="selectedRatings[rowIndex]"
+                     [value]="4" (change)="calculateWeightedAverage()">
+            </td>
+            <td>
+              <input type="radio" [name]="'category' + rowIndex" [(ngModel)]="selectedRatings[rowIndex]"
+                     [value]="3" (change)="calculateWeightedAverage()">
+            </td>
+            <td>
+              <input type="radio" [name]="'category' + rowIndex" [(ngModel)]="selectedRatings[rowIndex]"
+                     [value]="2" (change)="calculateWeightedAverage()">
+            </td>
+            <td>
+              <input type="radio" [name]="'category' + rowIndex" [(ngModel)]="selectedRatings[rowIndex]"
+                     [value]="1" (change)="calculateWeightedAverage()">
+            </td> -->
+          </tr>
+        </ng-template>
+      </p-table>
+      
+      
+<!-- <p-table   [value]="tabCritere"  dataKey="code" [style]="{'width': '70rem'}">
+    <ng-template pTemplate="header">
+        <tr>
+            
+            <th></th>
+            <th>Exceptionnel</th>
+            <th>Bon</th>
+            <th>Moyenne</th>
+            <th>Besoin de développement</th>
+            <th>Insatisfaisant</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-critere let-rowIndex="rowIndex">
+        <tr>
+          <td>
+            {{ critere.titrecritere }}
+          </td>
+          <td>
+            <input type="radio" [name]="'category' + rowIndex" [(ngModel)]="selectedRatings[rowIndex]"
+                   [value]="5" (change)="calculateWeightedAverage()">
+          </td>
+          <td>
+            <input type="radio" [name]="'category' + rowIndex" [(ngModel)]="selectedRatings[rowIndex]"
+                   [value]="4" (change)="calculateWeightedAverage()">
+          </td>
+          <td>
+            <input type="radio" [name]="'category' + rowIndex" [(ngModel)]="selectedRatings[rowIndex]"
+                   [value]="3" (change)="calculateWeightedAverage()">
+          </td>
+          <td>
+            <input type="radio" [name]="'category' + rowIndex" [(ngModel)]="selectedRatings[rowIndex]"
+                   [value]="2" (change)="calculateWeightedAverage()">
+          </td>
+          <td>
+            <input type="radio" [name]="'category' + rowIndex" [(ngModel)]="selectedRatings[rowIndex]"
+                   [value]="1" (change)="calculateWeightedAverage()">
+          </td>
+        </tr>
+      </ng-template> -->
+  <!--   <ng-template pTemplate="body" let-critere let-rowIndex="index">
+        <tr>
+            <td>
+            {{critere.titrecritere}}
+            </td>
+
+
+            <td>
+        <input type="radio" [name]="'category' + critere.IdCritere + rowIndex" [(ngModel)]="selectedRatings[critere.IdCritere + rowIndex]"
+               [value]="5" (change)="calculateWeightedAverage()">
+      </td>
+      <td>
+        <input type="radio" [name]="'category' + critere.IdCritere + rowIndex" [(ngModel)]="selectedRatings[critere.IdCritere + rowIndex]"
+               [value]="4" (change)="calculateWeightedAverage()">
+      </td>
+      <td>
+        <input type="radio" [name]="'category' + critere.IdCritere + rowIndex" [(ngModel)]="selectedRatings[critere.IdCritere + rowIndex]"
+               [value]="3" (change)="calculateWeightedAverage()">
+      </td>
+      <td>
+        <input type="radio" [name]="'category' + critere.IdCritere + rowIndex" [(ngModel)]="selectedRatings[critere.IdCritere + rowIndex]"
+               [value]="2" (change)="calculateWeightedAverage()">
+      </td>
+      <td>
+        <input type="radio" [name]="'category' + critere.IdCritere + rowIndex" [(ngModel)]="selectedRatings[critere.IdCritere + rowIndex]"
+               [value]="1" (change)="calculateWeightedAverage()">
+      </td>
+   
+              
+        </tr>
+    </ng-template> -->
+<!--</p-table>-->
+
+
+ </div>
+ <div class="field col-8 md:col-12"> 
+  <!-- <textarea
+  placeholder="Résumé"
+  rows="5"
+  cols="30"
+  pInputTextarea
+  [name]="'resume'"
+  [value]="ResForm.get('resume')?.value" 
+  (ngModelChange)="onResumeChange($event)"
+></textarea>
+<textarea
+  placeholder="Points forts"
+  rows="5"
+  cols="30"
+  pInputTextarea
+  [name]="'pointFort'"
+  [value]="ResForm.get('pointFort')?.value"
+  (ngModelChange)="onPointFortChange($event)"
+></textarea>
+<textarea
+  placeholder="Points d'améliorations"
+  rows="5"
+  cols="30"
+  pInputTextarea
+  [name]="'amelioration'"
+  [value]="ResForm.get('amelioration')?.value"
+  (ngModelChange)="onAmeliorationChange($event)"
+></textarea>
+<textarea
+  placeholder="Objectifs et défis"
+  rows="5"
+  cols="30"
+  pInputTextarea
+  [name]="'objectifs'"
+  [value]="ResForm.get('objectifs')?.value"
+  (ngModelChange)="onObjectifsChange($event)"
+></textarea>
+ -->
+ <textarea placeholder="Résumé" rows="5" cols="30" pInputTextarea
+ [(ngModel)]="resumeValue" name="resume"></textarea>
+<textarea placeholder="Points forts" rows="5" cols="30" pInputTextarea
+ [(ngModel)]="pointFortValue" name="pointFort"></textarea>
+<textarea placeholder="Points d'améliorations" rows="5" cols="30" pInputTextarea
+ [(ngModel)]="ameliorationValue" name="amelioration"></textarea>
+<textarea placeholder="Objectifs et défis" rows="5" cols="30" pInputTextarea
+ [(ngModel)]="objectifsValue" name="objectifs"></textarea>
+</div>
+
+<div class="flex flex-wrap gap-3">
+  Résultat de l’Evaluation de la performance
+  globale :
+    <div class="flex align-items-center">
+      <input type="radio" name="pizza" id="Exceptionnel" value="5">
+      <label for="Exceptionnel" class="ml-2">Exceptionnel</label>
+    </div>
+    
+    <div class="flex align-items-center">
+      <input type="radio" name="pizza" id="Bon" value="4">
+      <label for="Bon" class="ml-2">Bon</label>
+    </div>
+    
+    <div class="flex align-items-center">
+      <input type="radio" name="pizza" id="Moyen" value="3">
+      <label for="Moyen" class="ml-2">Moyen</label>
+    </div>
+  
+    <div class="flex align-items-center">
+      <input type="radio" name="pizza" id="BesoinDeDev" value="2">
+      <label for="BesoinDeDev" class="ml-2">Besoin de développement</label>
+    </div>
+    
+    <div class="flex align-items-center">
+      <input type="radio" name="pizza" id="Insatisfaisant" value="1">
+      <label for="Insatisfaisant" class="ml-2">Insatisfaisant</label>
+    </div>
+  </div>
+  <div class="button-container">
+  <button pButton type="button" label="Cancel" class="cancel-button"  (click)="Cancel()"></button>
+  <button pButton type="button" label="Confirmer" class="update-button" (click)="update()"></button>
+  </div>
+</form>
+</div>

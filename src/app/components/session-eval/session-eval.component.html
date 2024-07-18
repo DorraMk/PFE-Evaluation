@@ -1,0 +1,348 @@
+<body>
+	<div class="grid">
+	<div class="col-12">
+		<div class="card">
+			<h5>Liste des sessions d'évaluation</h5>
+			<p-table idKey="dt1" [rows]="10" #dt1 [value]="sessions" [loading]="loading" [rows]="10" [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" responsiveLayout="scroll">
+				<ng-template pTemplate="caption">
+					<div class="flex justify-content-between flex-column sm:flex-row">
+						<button pButton label="Ajouter" class="p-button-outlined mb-2 " icon="pi pi-plus" (click)="showDialog()"></button>
+						<span class="p-input-icon-left mb-2">
+							<i class="pi pi-search"></i>
+							<input pInputText type="text" #filter placeholder="Search Keyword" class="w-full"/>
+						</span>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="min-width: 12rem">
+							<div class="flex justify-content-between align-items-center">
+								Titre
+								<p-columnFilter type="text" field="name" display="menu" placeholder="Search by name"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 12rem">
+							<div class="flex justify-content-between align-items-center">
+								Date Création
+								<p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by  date"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 10rem">
+							<div class="flex justify-content-between align-items-center">
+								Date Lancement 
+								<p-columnFilter type="date" field="date" display="menu" placeholder="mm/dd/yyyy"></p-columnFilter>
+							</div>
+						</th>
+                        <th style="min-width: 12rem">
+							<div class="flex justify-content-between align-items-center">
+								Date Fin
+								<p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by date "></p-columnFilter>
+							</div>
+						</th>
+					
+                        
+                        <th style="min-width: 12rem">
+							<div class="flex justify-content-between align-items-center">
+								Population Concernée 
+								<p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by population"></p-columnFilter>
+							</div>
+						</th>
+
+						<th style="min-width: 12rem">
+							<div class="flex justify-content-between align-items-center">
+								Evaluateurs 
+								<p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by population"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 12rem">
+							<div class="flex justify-content-between align-items-center">
+								Etat 
+								<p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by population"></p-columnFilter>
+							</div>
+						</th>
+
+						<th style="min-width: 12rem">
+							<div class="flex justify-content-between align-items-center">
+								Action
+							
+							</div>
+						</th>
+				
+				</ng-template>
+          
+				<ng-template pTemplate="body"  let-session >
+					<tr>
+						<td>
+							{{session.titre}}
+						</td>
+						<td>
+							{{session.dateDebut | date:'short'}}
+						</td>
+						<td *ngIf="session.declenchement==='Annuelle'" >
+							{{session.dateLancement }}
+						</td>
+						<td *ngIf="session.declenchement==='Annuelle'" >
+							{{session.dateLancement }}
+						</td>
+						<td *ngIf="session.declenchement==='SelonDateDanniversaire'">
+							Selon date d'anniversaire
+						</td>
+						<td *ngIf="session.declenchement==='SelonDateDanniversaire'">
+							__
+						</td>
+						
+						<td >{{session.idSession |contratsBySession | async| getLib1}}</td>
+						<td >{{session.evals}}</td>
+						<td *ngIf="!session.desactiverSession"> En cours</td>
+						<td *ngIf="session.desactiverSession" > __ </td>
+						<td>
+							<p-toast></p-toast>
+<p-button
+  label="Desactiver"
+  *ngIf="!session.desactiverSession"
+  icon="pi pi-pen"
+  (click)="showConfirmation(session.idSession)"
+></p-button>
+<p-confirmDialog header="Delete Confirmation" icon="pi pi-info-circle" [baseZIndex]="10000">
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      icon="pi pi-check"
+      (click)="applyDesactiver()"
+      label="Yes"
+    ></button>
+    <button type="button" pButton icon="pi pi-times" (click)="cancelDesactiver()" label="No"></button>
+  </p-footer>
+</p-confirmDialog>
+						
+							<p-button [disabled]="session.desactiverSession" *ngIf="session.desactiverSession" label="Desactivée"   icon="pi pi-pen"></p-button>	
+						<!-- <p-splitButton label="Modifier" icon="pi pi-pen" (onClick)="ModifierSession(session.idSession)">
+							<p-menu>
+								<ng-template pTemplate="content">
+									<ul>
+										<li><button  label="Lancer" icon="pi pi-refresh" (click)="lancer()" ></button></li>
+									</ul>
+								</ng-template>
+							</p-menu>
+						</p-splitButton> -->
+						</td>
+						 <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">pas d'évaluations .</td>
+                       
+					</tr>
+				</ng-template> 
+					</tr>
+					
+				</ng-template>
+			 <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">pas d'évaluations .</td>
+                       
+					</tr>
+				</ng-template> 
+				
+    		</p-table>
+		</div>
+
+	</div>
+
+</div>
+
+<!--************************************Ajout Session ****************************************-->
+<p-dialog header="Ajout Session " [(visible)]="displayDialog"  [style]="{width: '80%'}">
+	<p-toast></p-toast>
+  <form [formGroup]="sessionForm"  (ngSubmit)="onSubmitt()">
+	<div class="card">
+	  <div class="grid p-fluid mt-2">
+		 <div class="field col-8 md:col-12">
+		
+		  <input 
+		  name="Titre" pInputText formControlName="titre"  type="text" style="width: 70%;" placeholder="Titre de session * "/>
+		  <div *ngIf="sessinonFormControls['titre'].errors && sessinonFormControls['titre'].touched" class="error-message">
+			<span *ngIf="sessinonFormControls['titre'].errors['required']" style="color: red;">Le titre est requis.</span>
+		  </div>
+		</div> 
+		<div>
+		<form [formGroup]="Formcat">
+			<div class="population">
+			<label for="categorie">Choisir les populations concernées * </label>
+			<p-multiSelect [options]="contrats"  defaultLabel="Selectionner les contrats" formControlName="contrat"  
+			optionLabel="lib1" (onChange)="onContratsChange($event.value)" >
+			</p-multiSelect>
+			<div *ngIf="catFormControls['contrat'].errors && catFormControls['contrat'].touched" class="error-message">
+				<span *ngIf="catFormControls['contrat'].errors['required']" style="color: red;">Il faut choisir au moins un contrat .</span>
+			  </div>		
+		<br>
+			<p-multiSelect [options]="Rhnomm"  defaultLabel="Selectionner la fonction *"  formControlName="populations" 
+			[(ngModel)]="selectedCategorie"
+			 display="chip"  optionLabel="lib1" (onChange)="onCategorieChange($event.value)" >
+			</p-multiSelect>
+			<div *ngIf="catFormControls['populations'].errors && catFormControls['populations'].touched" class="error-message">
+				<span *ngIf="catFormControls['populations'].errors['required']" style="color: red;">Il faut choisir au moins une population .</span>
+			  </div>
+		<!-- 	<p-message *ngIf="test === false" severity="error" text="Il n y a pas de grille pour cette fonction"></p-message> -->
+			<div class="mt-4">
+				<p-message *ngIf="test === false" severity="error" text="Il n y a pas de grille pour cette fonction"></p-message>
+
+			</div>	
+		</div>
+	
+		</form>
+		<p-dropdown  placeholder="Déclenechement *" [options]="declenchementValues"  formControlName="declenchement" [autoDisplayFirst]="false" (onChange)="onDeclenchementChange($event)"  class="dropdown">
+		</p-dropdown>
+		<div *ngIf="sessinonFormControls['declenchement'].errors && sessinonFormControls['declenchement'].touched" class="error-message">
+			<span *ngIf="sessinonFormControls['declenchement'].errors['required']" style="color: red;">Le type  de déclenchement est requis </span>
+		  </div>
+		
+		
+<br>
+		
+		
+	  <div class="field col-8 md:col-12" *ngIf="showFieldDate" >
+			<label for="categorie">Choisir la date de lancement * </label>
+				<p-calendar  dateFormat="dd.mm"  formControlName="dateLancement"></p-calendar>
+	
+			<!--<input name="DateLancement" pInputText  type="date"  placeholder="Date de lancement " style="width: 20%"/>
+		 	<div *ngIf="sessinonFormControls['dateLancement'].errors && sessinonFormControls['dateLancement'].touched" class="error-message">
+				<span *ngIf="sessinonFormControls['dateLancement'].errors['required']" style="color: red;">La date est requise.</span>
+			  </div> -->
+		  
+		  
+			<label for="categorie">Choisir la date fin *</label>
+				<p-calendar  dateFormat="dd.mm"   formControlName="dateFin"></p-calendar>
+			<!--<input 
+			name="DateFin" pInputText   type="date" placeholder="Date de fin " style="width: 20%;"/>
+			<div *ngIf="sessinonFormControls['dateFin'].errors && sessinonFormControls['dateFin'].touched" class="error-message">
+				<span *ngIf="sessinonFormControls['dateFin'].errors['required']" style="color: red;">La date est requise.</span>
+			  </div> -->
+		  </div> 
+
+		  <div class="field col-8 md:col-12" *ngIf="showFieldPeriode">
+			
+			<input name="NbjrsAvtAlerte" pInputText  style="width: 40%;" formControlName="periode" placeholder="Periode en mois *" type="number"/>
+			
+		  </div> 
+			<br>
+		
+	
+<br>
+<br> 
+
+		<p-table [value]="Evaluateurs"   [tableStyle]="{ 'min-width': '50rem' }">
+			<ng-template pTemplate="header">
+				<tr>
+					<th style="min-width: 10rem">
+						<div class="flex justify-content-between align-items-center">
+						  Evaluateurs 
+						</div>
+					  </th>
+					  <th style="min-width: 12rem">
+						<div class="flex justify-content-between align-items-center">
+						  Etat
+						</div>
+					  </th>
+					  <th style="min-width: 12rem">
+						  <div class="flex justify-content-between align-items-center">
+						   Coefficient
+						  </div>
+						</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-evaluateur>
+				<tr>
+					<td>{{ evaluateur.name }}</td>
+					
+					<td>
+						<p-toggleButton [onIcon]="'pi pi-check'" [offIcon]="'pi pi-times'"    [style]="{width:'30%'}" (onChange)="updateCoefficient(evaluateur)"></p-toggleButton>
+					</td>
+				
+					<td *ngIf="countActiveToggleButtons() > 1 && evaluateur.toggleButtonState">
+						<input
+						  name="Titre"
+						  pInputText
+						  type="number"
+						  style="width: 50%;"
+						  placeholder="Coefficient*"
+						/>
+					  </td>
+					  <td *ngIf="countActiveToggleButtons() <= 1">{{ evaluateur.coefficient }}</td>
+					
+
+				</tr>
+			</ng-template>
+		</p-table>
+</div>
+        
+
+	  </div>
+	
+	</div>
+	<button pButton  [disabled]="!sessionForm.valid && !Formcat.valid" type="submit"  >Ajouter </button>
+  </form>
+  </p-dialog>
+
+<!--*********************************Modif*****************************-->
+
+<!-- 
+
+  <p-dialog header="Modifier Grille " [(visible)]="displayDialogSessionmod" [style]="{width: '500px'}" >
+	<p-toast></p-toast>
+  <form [formGroup]="sessionForm" *ngIf="SessionSelected" (ngSubmit)="update()">
+	<div class="card">
+	  <div >
+	  
+  
+		<div class="field col-8 md:col-12">
+		  <label>Titre de la Session </label>
+		  <input 
+		  name="titre" pInputText formControlName="titre"  type="text"  [(ngModel)]="ancienneSession.titre"/>
+		</div>   
+		<div class="field col-8 md:col-12">
+			<label>Date creation  </label>
+			<input 
+			name="dateDebut" pInputText formControlName="dateDebut"  [(ngModel)]="ancienneSession.dateDebut" dateFormat="yy-mm-dd"/>
+			
+		  </div>  
+
+
+		  <div class="field col-8 md:col-12">
+			<label>Date de fin </label>
+			<input 
+			name="dateFin" pInputText formControlName="dateFin"  [(ngModel)]="ancienneSession.dateFin"/>
+		  </div>
+		  <div class="field col-8 md:col-12">
+			<label>Date de lancement  </label>
+			<input 
+			name="dateLancement" pInputText formControlName="dateLancement"   [(ngModel)]="ancienneSession.dateLancement" />
+		  </div>
+
+		  <div class="field col-8 md:col-12">
+			<label>Nombre de jours avant lancement</label>
+			<input 
+			name="NbjrsAvtAlerte" pInputText formControlName="nbjrsAvtAlerte"  type="number" [(ngModel)]="ancienneSession.nbjrsAvtAlerte"/>
+		  </div>
+
+		  <form [formGroup]="Formcat">
+		  <p-dropdown [options]="catEv" formControlName="evaluateurs" (onChange)="onSessionSelected($event.value)">
+			<option *ngFor="let category of catEv" [value]="category"  >{{ category }}</option>
+		  </p-dropdown>
+		  <p-dropdown [options]="catPop" formControlName="populations" (onChange)="onSessionSelectedd($event.value)">
+			<option *ngFor="let category of catPop" [value]="category"  >{{ category }}</option>
+		  </p-dropdown>
+		  </form>
+	  </div>
+	
+	</div>
+	<button pButton  type="submit" >Modifier</button>
+  </form>
+  </p-dialog> -->
+ 
+
+  </body>
+
+
+
+
+ 

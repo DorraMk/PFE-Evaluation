@@ -1,0 +1,76 @@
+<body>
+	<div class="grid">
+	<div class="col-12">
+		<div class="card">
+
+			<h5>Liste des évaluations disponibles   </h5>
+			<p-table idKey="dt1" [rows]="10" #dt1  [value]="evaluations" [rows]="10" [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" responsiveLayout="scroll">
+				<ng-template pTemplate="caption">
+				<!-- 	<div class="flex justify-content-between flex-column sm:flex-row">
+						<span class="p-input-icon-left mb-2">
+							<i class="pi pi-search"></i>
+							<input pInputText type="text" #filter placeholder="Search Keyword" class="w-full"/>
+						</span>
+					</div> -->
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="min-width: 12rem">
+							<div class="flex justify-content-between align-items-center">
+								Session
+								<p-columnFilter type="text" field="name" display="menu" placeholder="Search by name"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 12rem">
+							<div class="flex justify-content-between align-items-center">
+								Evalué
+								<p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by  date"></p-columnFilter>
+							</div>
+						</th>
+						<th style="min-width: 10rem">
+							<div class="flex justify-content-between align-items-center">
+								Fonction
+								<p-columnFilter type="date" field="date" display="menu" placeholder="mm/dd/yyyy"></p-columnFilter>
+							</div>
+						</th>				
+
+						<th style="min-width: 12rem">
+							<div class="flex justify-content-between align-items-center">
+								Action
+							
+							</div>
+						</th>
+				
+				</ng-template>
+          
+				<ng-template pTemplate="body"  let-eval >
+					<tr>
+						<td>{{eval.sessionid| getSession| async}}</td>
+						<td>{{eval.evalue | getEvalue |async }}</td>
+						<td>{{eval.evalue | getFonctionEvalue |getFonctionNom|async }}</td>					
+						<td>
+							<p-button label="Evaluer"  icon="pi pi-pen"  (click)="evaluate(eval.idRes)"></p-button>
+						</td>
+						 <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">pas d'évaluations .</td>
+                       
+					</tr>
+				</ng-template> 
+					</tr>
+					
+				</ng-template>
+			 <ng-template pTemplate="emptymessage">
+					<tr>
+						<td colspan="8">pas d'évaluations .</td>
+                       
+					</tr>
+				</ng-template> 
+				
+    		</p-table>
+		</div>
+
+	</div>
+
+</div>
+</body>

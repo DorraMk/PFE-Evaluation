@@ -1,0 +1,505 @@
+
+<body>
+ <h5>Gestion  Grille d'évaluation </h5>
+ <p-tabView  ><!--[(activeIndex)]="activeIndex"-->
+    <p-tabPanel header="Liste des grilles">
+  
+        
+
+            <h5>Liste des grilles d'évaluation</h5>
+            <p-table idKey="dt1" [rows]="10" #dt1 [value]="grilles" [rows]="10" [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" responsiveLayout="scroll">
+              
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="min-width: 12rem">
+                    <div class="flex justify-content-between align-items-center">
+                      Titre
+                      <p-columnFilter type="text" field="name" display="menu" placeholder="Search by name"></p-columnFilter>
+                    </div>
+                  </th>
+                
+                             
+                  
+                           
+                      
+                  <th style="min-width: 12rem">
+                    <div class="flex justify-content-between align-items-center">
+                      Fonction  
+                      <p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by population"></p-columnFilter>
+                    </div>
+                  </th>
+      
+                  <th style="min-width: 12rem">
+                    <div class="flex justify-content-between align-items-center">
+                      Action
+                    
+                    </div>
+                  </th>
+              
+              </ng-template>
+                
+              <ng-template pTemplate="body"  let-grille >
+                <tr>
+                  <td>
+                    {{grille.titreG}}
+                                
+                  </td>
+                  <td>
+                    {{ grille.fonction | pipemethods |async }}
+                                
+                  </td>
+                  <td>
+                   
+                   <button pButton  (click)="ModifierGrille(grille.idGrille)" icon="pi pi-search" styleClass="p-button-outlined"></button>
+                  <!--<p-splitButton label="Modifier" icon="pi pi-pen"   [model]="items"></p-splitButton>	
+                  <p-splitButton label="Modifier" icon="pi pi-pen" (onClick)="ModifierSession(session.idSession)">
+                    <p-menu>
+                      <ng-template pTemplate="content">
+                        <ul>
+                          <li><button  label="Lancer" icon="pi pi-refresh" (click)="lancer()" ></button></li>
+                        </ul>
+                      </ng-template>
+                    </p-menu>
+                  </p-splitButton> -->
+                  </td>
+                   <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="8">pas de grilles .</td>
+                             
+                </tr>
+              </ng-template> 
+                </tr>
+                
+              </ng-template>
+             <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="8">pas de grilles .</td>
+                             
+                </tr>
+              </ng-template> 
+              
+              </p-table>
+  
+      
+      
+      
+    
+    </p-tabPanel>
+    <p-tabPanel header="Ajout d'une grille ">
+      <p-toast></p-toast>
+      <form [formGroup]="grilleForm" title="Ajout Grille" (ngSubmit)="onSubmitg()" >
+
+        <div class="fGrille">
+         <input  placeholder="Titre de la grille "  name="titreG" pInputText formControlName="titreG" pTooltip="Tapez le titre de la grille"  type="text" required /> <br>
+        <div *ngIf="grilleFormControls['titreG'].errors && grilleFormControls['titreG'].touched" class="error-message">
+           <span *ngIf="grilleFormControls['titreG'].errors['required']" style="color: red;">Le titre de la grille  est requis.</span>
+         </div> 
+         <p-dropdown  placeholder="Fonctions " [options]="Rhnomm" [autoDisplayFirst]="false"  class="dropdown" formControlName="fonction" optionValue="idnom" optionLabel="lib1" (ngModelChange)="onCategorySelected($event)" >
+        </p-dropdown>
+        <p-message *ngIf="test === true" severity="warn" text="Il y a déja une grille de cette fonction"></p-message>
+
+             
+        </div>
+             <br><br>
+             <p-fieldset  legend="Ajout d'un théme" [toggleable]="true" [style]="{width: '100%'}" [collapsed]="panelCollapsed" >
+               <form [formGroup]="themeForm" (ngSubmit)="onSubmit()" >
+                
+                   <div class="grid p-fluid mt-2">
+                 
+               
+                     <div class="field col-8 md:col-12">
+                      
+                       <input placeholder="Titre du théme" name="titreTheme" pTooltip="Titre théme" pInputText formControlName="titre" type="text" required [style]="{width: '20%'}"  />
+                       <div *ngIf="themeFormControls['titre'].errors && themeFormControls['titre'].touched" class="error-message">
+                         <span *ngIf="themeFormControls['titre'].errors['required']" style="color: red;" >Le titre est requis.</span>
+                        
+                       </div>
+                       
+                       <p-table  [value]="champsList" *ngIf="critereIsAdded">
+                         <ng-template pTemplate="header">
+                           <tr>
+                            
+                             <th style="min-width: 10rem">
+                               <div class="flex justify-content-between align-items-center">
+                                 Titre Critére 
+                               </div>
+                             </th>
+                                         <th style="min-width: 12rem">
+                               <div class="flex justify-content-between align-items-center">
+                                 Ponderation
+                               </div>
+                             </th>
+                         </ng-template>
+                         <ng-template let-champ pTemplate="body" >
+                         
+                             <tr >
+                               <td>{{ champ.titrecritere }}</td>
+                               <td>{{ champ.ponderation }}</td>
+                             </tr>
+                         
+                         </ng-template>
+                         
+                       </p-table>
+                       
+                     </div>
+     
+     
+                     <p-fieldset style="width: 90%" >
+                      <ng-template pTemplate="header">
+                        <div class="flex align-items-center text-primary">
+                            <span class="pi pi-user mr-2"></span>
+                            <span class="font-bold text-lg">Sous Thémes </span>
+                        </div>
+                    </ng-template>
+                       <form [formGroup]="critereForm" (ngSubmit)="onSubmitc()" >
+                
+                        
+                       
+                     
+                           <div class="field col-8 md:col-12">
+                            
+                             
+                            <input  placeholder="Titre de critére" name="titre" pTooltip="Titre critere" pInputText formControlName="titrecritere" type="text" required [style]="{width: '60%'}"  (blur)="onSubmitc()"  />
+                            
+
+                            <div *ngIf="critereFormControls['titrecritere'].errors && critereFormControls['titrecritere'].touched" class="error-message">
+                               <span *ngIf="critereFormControls['titrecritere'].errors['required']" style="color: red;" >Le titre est requis.</span>
+                             </div>
+     
+                             <input  placeholder="Ponderation" name="ponderation" pTooltip="ponderation critere" pInputText formControlName="ponderation" type="number" required [style]="{width: '30%'}" (blur)="onSubmitc()" />
+                             <div *ngIf="critereFormControls['titrecritere'].errors && critereFormControls['titrecritere'].touched" class="error-message">
+                               <span *ngIf="critereFormControls['titrecritere'].errors['required']" style="color: red;" >La ponderation est requise.</span>
+                              
+                             </div>
+                           </div>
+                           
+                         
+                         
+                         
+                         <!-- <button style="margin-left: 300px;" pButton type="submit" *ngIf="critereForm.valid" [style]="{width: '20%'}" >Valider</button> -->
+                     
+                     </form>
+                     </p-fieldset>
+                   
+                   </div><br>
+                    <button style="margin-left: 400px;" pButton type="submit" *ngIf="themeForm.valid" >Valider théme</button>
+                   
+               
+               </form>
+                </p-fieldset>
+       <br>
+                <div *ngFor="let data of formData2">
+                <p-panel header="{{data.titre}}"*ngIf="ThemeIsAdded" >
+                 <p-table  [value]="data.IdTheme| criteresByTheme |async ">
+               <!--    <p-table *ngIf="(data.IdTheme | criteresByTheme | async) as criteres"> -->
+                   <ng-template pTemplate="header">
+                     <tr>
+                      
+                       <th style="min-width: 10rem">
+                         <div class="flex justify-content-between align-items-center">
+                           Titre Critére 
+                         </div>
+                       </th>
+                                   <th style="min-width: 12rem">
+                         <div class="flex justify-content-between align-items-center">
+                           Ponderation
+                         </div>
+                       </th>
+                   </ng-template>
+                   <ng-template let-champ pTemplate="body" >
+                   
+                       <tr >
+                         <td>{{ champ.titrecritere }}</td>
+                         <td>{{ champ.ponderation }}</td>
+                       </tr>
+                   
+                   </ng-template>
+                   
+                 </p-table>
+             </p-panel>
+             </div>
+     <br><br>
+       
+                <button  pButton type="submit" [disabled]="!grilleForm.valid"  >Valider Grille</button><!--(click)="activeIndex = 0"-->
+               
+              </form>
+    </p-tabPanel>
+    
+</p-tabView>
+
+
+
+ <!-- <button pButton label="Ajouter" class="p-button-outlined mb-2 " icon="pi pi-plus"   (click)="showDialogGrille();showInf()"></button> -->
+ <!-- <p-dialog header="Ajout d'une grille  "  [style]="{width: '90%'}" [(visible)]="displayDialogGrille" class="dialogGrille" >
+ 
+
+
+ </p-dialog>
+<br> -->
+
+
+
+
+
+
+<!--********************************Modif Grille*************************************************-->
+<p-dialog header="Modification d'une grille  "  [style]="{width: '90%'}" [(visible)]="displayDialogGrillemod" class="dialogGrille" >
+  <p-toast></p-toast>
+
+<form [formGroup]="grilleForm" (ngSubmit)=" modG()">
+
+   <div class="fGrille">
+    <input  placeholder="Titre de la grille "  name="titreG" pInputText formControlName="titreG" pTooltip="Tapez le titre de la grille" type="text" required /> <br>
+   <div *ngIf="grilleFormControls['titreG'].errors && grilleFormControls['titreG'].touched" class="error-message">
+      <span *ngIf="grilleFormControls['titreG'].errors['required']" style="color: red;">Le titre de la grille  est requis.</span>
+    </div> 
+    <p-dropdown  placeholder="Fonctions " [options]="Rhnomm" [autoDisplayFirst]="false"  class="dropdown" formControlName="fonction" optionValue="idnom" optionLabel="lib1" >
+    </p-dropdown>
+   </div>
+    
+        <br><br>
+    
+
+  <h5>Liste des Themes  </h5>
+
+  <p-divider align="right">
+          
+    <p-button  icon="pi pi-plus" styleClass="p-button-outlined" (click)="ajoutTheme()"></p-button>
+</p-divider>
+  <p-table idKey="dt1" [rows]="10" #dt1 [value]="formData" [rows]="10" [rowHover]="true" [style]="{width: '70%'}"  [paginator]="false" >
+				
+    <ng-template pTemplate="header">
+      <tr>
+       
+        <th style="min-width: 10rem">
+          <div class="flex justify-content-between align-items-center">
+            Titre  
+          </div>
+        </th>
+        <th style="min-width: 12rem">
+          <div style="  margin-left: 670px;">
+           Action
+          </div>
+        </th>
+    </ng-template>
+      
+    <ng-template pTemplate="body"  let-theme >
+      <tr>
+        <td>
+          {{theme.titre}}            
+        </td>
+        <td>
+         <button pButton (click)="ModifierTheme(theme.idTheme)"  styleClass="p-button-outlined" icon="pi pi-search" style="margin-left: 700px;"></button>
+        </td>
+      </tr>
+      
+    </ng-template>   
+    </p-table> 
+<br><br>
+
+<!--Ajout Theme dans la modification  -->
+<p-card header="Ajout Théme"  *ngIf="displayy" >
+  
+  <form [formGroup]="themeForm" (ngSubmit)="onSubmit()" >
+   
+    <div class="grid p-fluid mt-2">
+  
+
+      <div class="field col-8 md:col-12">
+       
+        <input placeholder="Titre du théme" name="titreTheme" pTooltip="Titre théme" pInputText formControlName="titre" type="text" required [style]="{width: '20%'}"  />
+        <div *ngIf="themeFormControls['titre'].errors && themeFormControls['titre'].touched" class="error-message">
+          <span *ngIf="themeFormControls['titre'].errors['required']" style="color: red;" >Le titre est requis.</span>
+         
+        </div>
+        
+        <p-table  [value]="champsList" *ngIf="critereIsAdded">
+          <ng-template pTemplate="header">
+            <tr>
+             
+              <th style="min-width: 10rem">
+                <div class="flex justify-content-between align-items-center">
+                  Titre Critére 
+                </div>
+              </th>
+                          <th style="min-width: 12rem">
+                <div class="flex justify-content-between align-items-center">
+                  Ponderation
+                </div>
+              </th>
+          </ng-template>
+          <ng-template let-champ pTemplate="body" >
+          
+              <tr >
+                <td>{{ champ.titrecritere }}</td>
+                <td>{{ champ.ponderation }}</td>
+              </tr>
+          
+          </ng-template>
+          
+        </p-table>
+        
+      </div>
+
+
+      <p-fieldset style="width: 90%" >
+       <ng-template pTemplate="header">
+         <div class="flex align-items-center text-primary">
+             <span class="pi pi-user mr-2"></span>
+             <span class="font-bold text-lg">Sous Thémes </span>
+         </div>
+     </ng-template>
+        <form [formGroup]="critereForm" (ngSubmit)="onSubmitc()" >
+ 
+         
+        
+      
+            <div class="field col-8 md:col-12">
+             
+              <input placeholder="Titre de critére" name="titre" pTooltip="Titre critere" pInputText formControlName="titrecritere" type="text" required [style]="{width: '60%'}"  />
+              <div *ngIf="critereFormControls['titrecritere'].errors && critereFormControls['titrecritere'].touched" class="error-message">
+                <span *ngIf="critereFormControls['titrecritere'].errors['required']" style="color: red;" >Le titre est requis.</span>
+               
+              </div>
+
+              <input placeholder="Ponderation" name="ponderation" pTooltip="ponderation critere" pInputText formControlName="ponderation" type="number" required [style]="{width: '30%'}" (blur)="onSubmitc()" />
+              <div *ngIf="critereFormControls['titrecritere'].errors && critereFormControls['titrecritere'].touched" class="error-message">
+                <span *ngIf="critereFormControls['titrecritere'].errors['required']" style="color: red;" >Le titre est requis.</span>
+               
+              </div>
+            </div>
+            
+          
+          
+          
+         
+      
+      </form>
+      </p-fieldset>
+    
+    </div><br>
+     <button style="margin-left: 400px;" pButton type="submit" *ngIf="themeForm.valid" >Valider théme</button>
+  
+
+</form>
+</p-card>
+
+<br>
+<br>
+
+
+
+<!--Modif Theme-->
+<p-dialog  header="Modification du théme"   [style]="{width: '100%'}" [(visible)]="displayDialogThememod" >
+  <form [formGroup]="themeForm" *ngIf="ThemeSelected" (ngSubmit)="modT()" >
+  
+      <div class="grid p-fluid mt-2">
+         <div class="field col-8 md:col-12">
+          <label>Titre du théme      </label>
+          <input 
+          name="titreTheme" pInputText formControlName="titre"  type="text"   [style]="{width: '60%'}"/>
+          <div *ngIf="themeFormControls['titre'].errors && themeFormControls['titre'].touched" class="error-message">
+            <span *ngIf="themeFormControls['titre'].errors['required']" style="color: red;" >Le titre est requis.</span>
+            
+          </div>
+          <p-divider align="right">
+          
+            <p-button  icon="pi pi-plus" styleClass="p-button-outlined" (click)="ajoutCritere()"></p-button>
+        </p-divider>
+        </div> 
+        
+        
+  
+      <p-table  [value]="champsList"  style="width: 100%;">
+        <ng-template pTemplate="header">
+          <tr>
+           
+            <th style="min-width: 10rem">
+              <div class="flex justify-content-between align-items-center">
+                Titre Critére 
+              </div>
+            </th>
+              <th style="min-width: 12rem">
+              <div class="flex justify-content-between align-items-center">
+                Ponderation
+              </div>
+            </th>
+            <th style="min-width: 12rem">
+              <div class="flex justify-content-between align-items-center">
+               Action
+              </div>
+            </th>
+        </ng-template>
+        <ng-template let-champ pTemplate="body" >
+        
+            <tr >
+              <td>{{ champ.titrecritere }}</td>
+              <td>{{ champ.ponderation }}</td>
+              <td>
+                <button pButton (click)="ModifierCritere(champ.idCritere)" icon="pi pi-search"  styleClass="p-button-outlined"></button>
+               </td>
+            </tr>
+        
+        </ng-template>
+        
+      </p-table>
+   <br><br>
+      <p-panel header="Modification critére "  *ngIf="CritereSelected" style="width: 70%;">
+        <form [formGroup]="critereForm"  (ngSubmit)="modC()" >
+  
+          <div class="field col-8 md:col-12">
+                            
+            <input placeholder="Titre de critére" name="titre" pTooltip="Titre critere" pInputText formControlName="titrecritere" type="text" required [style]="{width: '60%'}"  />
+            <div *ngIf="critereFormControls['titrecritere'].errors && critereFormControls['titrecritere'].touched" class="error-message">
+              <span *ngIf="critereFormControls['titrecritere'].errors['required']" style="color: red;" >Le titre est requis.</span>
+             
+            </div>
+
+            <input placeholder="Ponderation" name="ponderation" pTooltip="ponderation critere" pInputText formControlName="ponderation" type="number" required [style]="{width: '30%'}"  />
+            <div *ngIf="critereFormControls['titrecritere'].errors && critereFormControls['titrecritere'].touched" class="error-message">
+              <span *ngIf="critereFormControls['titrecritere'].errors['required']" style="color: red;" >Le titre est requis.</span>
+             
+            </div>
+          </div>
+       <br><br>
+       <button pButton  type="submit" style="width: 10%; margin-left: 80%;" >valider modification</button>
+      </form>
+     </p-panel>
+      <p-card header="Ajout critére "  *ngIf="displayyC" style="width: 80%;">
+        
+         <form [formGroup]="critereForm" (ngSubmit)="onSubmitc()" >
+  
+             <div class="field col-8 md:col-12">
+              
+               <input placeholder="Titre de critére" name="titre" pTooltip="Titre critere" pInputText formControlName="titrecritere" type="text" required [style]="{width: '60%'}"  />
+               <div *ngIf="critereFormControls['titrecritere'].errors && critereFormControls['titrecritere'].touched" class="error-message">
+                 <span *ngIf="critereFormControls['titrecritere'].errors['required']" style="color: red;" >Le titre est requis.</span>
+                
+               </div>
+
+               <input placeholder="Ponderation" name="ponderation" pTooltip="ponderation critere" pInputText formControlName="ponderation" type="number" required [style]="{width: '30%'}" (blur)="onSubmitc()" />
+               <div *ngIf="critereFormControls['titrecritere'].errors && critereFormControls['titrecritere'].touched" class="error-message">
+                 <span *ngIf="critereFormControls['titrecritere'].errors['required']" style="color: red;" >Le titre est requis.</span>
+                
+               </div>
+             </div>
+             
+           
+           
+           
+          
+       
+       </form>
+      </p-card> 
+
+      </div>
+   <br><br>
+    <button pButton  type="submit" [disabled]="!themeForm.valid" >valider</button>
+  </form>
+</p-dialog>
+           <button  pButton type="submit"  >Valider </button>
+</form>
+ </p-dialog>
+<br>
+</body>      
+   

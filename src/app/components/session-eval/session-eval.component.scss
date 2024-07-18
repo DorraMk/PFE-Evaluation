@@ -1,0 +1,11 @@
+.custom-dialog ::ng-deep .p-dialog {
+    width: 400px; /* Adjust the width as per your requirement */
+    max-width: 90vw; /* Set a maximum width to ensure it fits within the viewport */
+    /* Add other custom styles */
+    background-color: red;
+  }
+  .population,.field col-8 md:col-12
+   {
+    display: flex;
+   }
+   

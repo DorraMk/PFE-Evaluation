@@ -1,0 +1,66 @@
+<div class="layout-topbar">
+    <a class="layout-topbar-logo" routerLink="">
+        <img src="assets/layout/images/logo.png" style="width: 100px; height: auto;" alt="logo">
+       
+    </a>
+    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+        <i class="pi pi-bars"></i>
+    </button>
+
+    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="layoutService.showProfileSidebar()">
+        <i class="pi pi-ellipsis-v"></i>
+    </button>
+
+    <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+     
+        <button class="p-link" (click)="opp.toggle($event)" >
+          
+            <ng-container *ngIf="badge === 1 && flgDes === false; else otherIcon">
+                <i class="pi pi-bell" pBadge style="font-size: 1.5rem" ></i>
+            </ng-container>
+            <ng-template #otherIcon>
+                <i class="pi pi-bell" style="font-size: 1.5rem"></i>
+            </ng-template>
+  
+           <!--  <i class="pi pi-bell" pBadge style="font-size: 1.5rem" value="{{badge}}" *ngIf="badge===1 && flgDes===false"></i>
+            <i class="pi pi-bell"  style="font-size: 1.5rem" *ngIf="badge===0 && flgDes===true"></i> -->
+        </button>
+
+            <button class="p-link layout-topbar-button"  [routerLink]="" (click)="op.toggle($event)">
+            <i class="pi pi-cog"></i>
+            <span>Settings</span>
+        </button>
+    </div>
+
+    <p-overlayPanel #op>
+        <i class="pi pi-sign-out   " ></i>
+    <a routerLink="login" (click)="signOut()"> <b> Log Out</b></a>
+    </p-overlayPanel>
+
+    <p-overlayPanel  #opp >
+       <div  *ngIf="notifs.length>0 ">    
+        <a  routerLink="evaluation">
+        <h4>{{this.Notification.messageNotif}} </h4>
+            <p style="font-size: medium;">
+               {{this.Notification.description}}  
+               <span style="color: rgb(142, 142, 152); font-size: small; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ this.Notification.dateNotif | date:'short' }}
+              </span>
+            </p>
+      </a>
+      </div>
+
+      <div  *ngIf="notifs.length===0 ">    
+       
+        
+            <p style="font-size: medium;">
+                <i class="pi pi-times" style="color: red;" ></i>  Vous n'avez aucune notification
+              
+            </p>
+  
+      </div>
+      
+      
+    </p-overlayPanel>
+    
+</div>

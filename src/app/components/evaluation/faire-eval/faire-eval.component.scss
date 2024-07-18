@@ -1,0 +1,57 @@
+.Res
+{
+    display: flex;
+}
+/* .form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+  }
+
+
+  form {
+    padding: 20px;
+  }
+
+
+  button {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+  } */
+
+    .form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+  }
+
+  /* Add some padding to the form so the buttons don't stick to the edges */
+  form {
+    padding: 20px;
+  }
+
+  /* Position the button container at the bottom right */
+  .button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+  }
+
+  /* Style the buttons */
+  button {
+    min-width: 100px; /* Adjust the width as needed */
+  }
+
+  .cancel-button {
+    background-color: #ccc; /* You can change the color as needed */
+  }
+
+  .update-button {
+    background-color: #007bff; /* You can change the color as needed */
+    color: #fff; /* You can change the text color as needed */
+  }
